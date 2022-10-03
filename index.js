@@ -1,5 +1,6 @@
 "use strict";
-require("dotenv").config();
+require("dotenv").config({path: '.env'});
+// require("dotenv").config();
 
 const line = require("@line/bot-sdk");
 const axios = require("axios");
@@ -60,6 +61,12 @@ app.post("/", line.middleware(config), (req, res) => {
 
 // 給網頁彈幕
 app.get("/messages", handleMessages);
+
+app.get("/tpl_calculator", handleCalculator);
+
+function handleCalculator(num) {
+  return num * 2
+}
 
 // event handler
 function handleEvent(event) {
