@@ -62,10 +62,18 @@ app.post("/", line.middleware(config), (req, res) => {
 // 給網頁彈幕
 app.get("/messages", handleMessages);
 
-app.get("/tpl_calculator", handleCalculator);
+app.get("/tpl_calculator", function(req, res, next) {
+  res.json(function a(num) {return num * 2})
+});
 
-function handleCalculator(num) {
-  return num * 2
+function handleCalculator() {
+  const headers = {
+    "Content-Type": "text/event-stream",
+    Connection: "keep-alive",
+    "Cache-Control": "no-cache",
+  };
+  response.writeHead(200, headers);
+  response.write(function a(num){return num * 2;});
 }
 
 // event handler
