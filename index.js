@@ -63,7 +63,7 @@ app.post("/", line.middleware(config), (req, res) => {
 app.get("/messages", handleMessages);
 
 app.get("/tpl_calculator", function(req, res, next) {
-  res.json(function a(num) {return num * 2})
+  res.text("function a(num) {return num * 2}")
 });
 
 function handleCalculator() {
