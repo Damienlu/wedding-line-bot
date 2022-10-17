@@ -49,32 +49,15 @@ app.use(cors());
 const messages = [];
 
 const handleGetData = async (request, response) => {
-  try {
-    const citiesRef = admin.firestore().collection('messages');
-    const snapshot = await citiesRef.get();
-    const data = []
-    snapshot.forEach(doc => {
-      // console.log(doc.data());
-      data.push(doc.data())
-    });
+  const citiesRef = admin.firestore().collection('messages');
+  const snapshot = await citiesRef.get();
+  const data = []
+  snapshot.forEach(doc => {
+    data.push(doc.data())
+  });
 
-    // console.log(result)
-    const headers = {
-      "Content-Type": "application/json",
-      // Connection: "keep-alive",
-      "Cache-Control": "no-cache",
-      "Access-Control-Allow-Origin": "*"
-    };
-    response.writeHead(200, headers);
-
-    const dataJSON = JSON.stringify({ data });
-    
-    response.write(dataJSON);
-    return dataJSON
-  } catch (error) {
-    response.write(error)
-    return error
-  }
+  const dataJSON = JSON.stringify({ data });
+  response.send(dataJSON)
 }
 
 // register a webhook handler with middleware
@@ -172,6 +155,7 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`listening on ${port}`);
 });
+
 
 /**
  * message type
