@@ -48,6 +48,35 @@ app.use(cors());
 
 const messages = [];
 
+const handleGetData = async (request, response) => {
+  try {
+    const citiesRef = admin.firestore().collection('messages');
+    const snapshot = await citiesRef.get();
+    const data = []
+    snapshot.forEach(doc => {
+      // console.log(doc.data());
+      data.push(doc.data())
+    });
+
+    // console.log(result)
+    const headers = {
+      "Content-Type": "application/json",
+      // Connection: "keep-alive",
+      "Cache-Control": "no-cache",
+      "Access-Control-Allow-Origin": "*"
+    };
+    response.writeHead(200, headers);
+
+    const dataJSON = JSON.stringify({ data });
+    
+    response.write(dataJSON);
+    return dataJSON
+  } catch (error) {
+    response.write(error)
+    return error
+  }
+}
+
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 // 給line bot
@@ -61,6 +90,9 @@ app.post("/", line.middleware(config), (req, res) => {
 
 // 給網頁彈幕
 app.get("/messages", handleMessages);
+
+// 給admin 顯示資料
+app.get("/data", handleGetData)
 
 // event handler
 function handleEvent(event) {
@@ -111,6 +143,7 @@ function handleEvent(event) {
     })
     .catch((error) => { console.error(error) });
 }
+
 
 function handleMessages(request, response) {
   const headers = {
